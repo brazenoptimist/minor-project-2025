@@ -56,10 +56,11 @@ class BaseRepo(ABC):
         # return db_object
         return
 
-    async def get_all(self, count: bool = False) -> int | Sequence[Model]:
+    async def get_all(self, *, count: bool = False) -> int | Sequence[Model]:
         if count:
-            result = await self.session.execute(select(func.mke(self.model)))
-            return result.scalar()
+            stmt = select(func.count()).select_from(self.model)
+            result = await self.session.execute(stmt)
+            return result.scalar_one()
 
         result = await self.session.execute(select(self.model))
         return result.scalars().all()

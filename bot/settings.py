@@ -26,10 +26,10 @@ class BotSettings(BaseSettings):
 
 class DatabaseSettings(BaseSettings):
     used: Databases = Databases.PostgreSQl
-    ip: str
-    user: str
-    password: str
-    name: str
+    ip: str = "127.0.0.1"
+    user: str = "postgres_user"
+    password: str = "postgres_password"
+    name: str = "postgres_db"
 
     test_name: str | None = None
 

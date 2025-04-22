@@ -11,8 +11,7 @@ router = Router(name=__name__)
 logger = logging.getLogger()
 
 
-
-@router.message(CommandStart(), flags={"user": False, "chat": False})
+@router.message(CommandStart())
 async def start(message: types.Message) -> None:
     await message.reply("Hello! I'm using a template from @Not_Bupyc!", reply_markup=start_keyboard)
 

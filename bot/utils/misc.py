@@ -44,7 +44,7 @@ async def bot_info_dict() -> dict[str, Any]:
         "ram_load_mb": "n/a",
         "ram_load": "n/a",
         "arch_emoji": "n/a",
-        "arch": "n/a",
+        "arch": "na",
         "os": "n/a",
         "python": "n/a",
         "aiogram": aiogram.__version__,

@@ -1,14 +1,14 @@
-from enum import StrEnum, IntEnum
+from enum import Enum
 
 
-class Databases(StrEnum):
+class Databases(str, Enum):
     PostgreSQl = "PostgreSQL"
     MySQL = "MySQL"
 
 
-class PostgreSQLDrivers(StrEnum):
+class PostgreSQLDrivers(str, Enum):
     ASYNC_DRIVER = "asyncpg"
 
 
-class MySQLDrivers(StrEnum):
+class MySQLDrivers(str, Enum):
     ASYNC_DRIVER = "asyncmy"
