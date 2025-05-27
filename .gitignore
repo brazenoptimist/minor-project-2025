@@ -134,3 +134,7 @@ dmypy.json
 
 # Other
 migrations/versions/*.py
+
+pgdata
+migrations
+.DS_Store

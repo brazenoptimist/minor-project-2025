@@ -40,7 +40,6 @@ start:
 migration:
 	@poetry run alembic revision \
 	  --autogenerate \
-	  --rev-id $(shell poetry run python migrations/_get_next_revision_id.py) \
 	  --message $(message)
 
 # Migrate

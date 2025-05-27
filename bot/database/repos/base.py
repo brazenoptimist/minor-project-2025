@@ -38,10 +38,15 @@ class BaseRepo(ABC):
 
         return db_obj[0] if len(db_obj) == 1 else db_obj
 
-    async def get(self, db_object_id: int, *options) -> Model | None:
-        q = select(self.model).where(self.model.id == db_object_id).options(*[selectinload(i) for i in options])
-
-        return (await self.session.execute(q)).scalar()
+    async def get(self, *args, **filters) -> Model | None:
+        if args and not filters:
+            if hasattr(self.model, 'id'):
+                filters = {'id': args[0]}
+            else:
+                raise ValueError("Model has no 'id' attribute to filter by")
+        
+        q = select(self.model).filter_by(**filters)
+        return (await self.session.execute(q)).scalar_one_or_none()
 
     async def delete(self, *db_objects: Model) -> None:
         for i in db_objects:
@@ -56,10 +61,11 @@ class BaseRepo(ABC):
         # return db_object
         return
 
-    async def get_all(self, count: bool = False) -> int | Sequence[Model]:
+    async def get_all(self, *, count: bool = False) -> int | Sequence[Model]:
         if count:
-            result = await self.session.execute(select(func.mke(self.model)))
-            return result.scalar()
+            stmt = select(func.count()).select_from(self.model)
+            result = await self.session.execute(stmt)
+            return result.scalar_one()
 
         result = await self.session.execute(select(self.model))
         return result.scalars().all()

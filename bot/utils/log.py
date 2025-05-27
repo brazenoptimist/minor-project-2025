@@ -111,6 +111,8 @@ class TelegramHandler(logging.Handler):
         self.add_log(record)
 
     async def send(self, message: str):
+        if self.log_chat_id is None:
+            return
         await self.bot.send_message(self.log_chat_id, message)
 
     def send_extra_logs(self, record: LogRecord) -> None:

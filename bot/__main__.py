@@ -50,15 +50,6 @@ async def _main() -> None:
     logger.info("Starting bot...")
     logging.getLogger().addHandler(_get_telegram_handler())
 
-    if settings.redis.use:
-        try:
-            await test_redis_pool()
-        except ConnectionError as e:
-            logger.error(
-                "Failed connection to Redis",
-                e,
-            )
-            exit(1)
     try:
         await test_database_pool()
     except ConnectionRefusedError as e:
