@@ -38,7 +38,13 @@ class BaseRepo(ABC):
 
         return db_obj[0] if len(db_obj) == 1 else db_obj
 
-    async def get(self, **filters) -> Model | None:
+    async def get(self, *args, **filters) -> Model | None:
+        if args and not filters:
+            if hasattr(self.model, 'id'):
+                filters = {'id': args[0]}
+            else:
+                raise ValueError("Model has no 'id' attribute to filter by")
+        
         q = select(self.model).filter_by(**filters)
         return (await self.session.execute(q)).scalar_one_or_none()
 
