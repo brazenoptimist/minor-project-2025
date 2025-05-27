@@ -28,6 +28,7 @@ class DatabaseSettings(BaseSettings):
     used: Databases = Databases.PostgreSQl
     ip: str = "127.0.0.1"
     user: str = "postgres_user"
+    port: int = 5432
     password: str = "postgres_password"
     name: str = "postgres_db"
 
@@ -38,7 +39,7 @@ class DatabaseSettings(BaseSettings):
     def build_postgres_url(
             self,
     ) -> str:
-        return f"postgresql+{PostgreSQLDrivers.ASYNC_DRIVER}://" f"{self.user}:{self.password}" f"@{self.ip}/{self.name}"
+        return f"postgresql+asyncpg://{self.user}:{self.password}@{self.ip}/{self.name}"
 
     def build_mysql_url(
             self,
