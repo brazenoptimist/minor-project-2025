@@ -1,5 +1,5 @@
-from aiogram.types import InlineKeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import InlineKeyboardButton, KeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
 start_keyboard = InlineKeyboardBuilder(
     markup=[
@@ -9,3 +9,8 @@ start_keyboard = InlineKeyboardBuilder(
         ]
     ]
 ).as_markup()
+
+def build_initial_survey_keyboard():
+    builder = ReplyKeyboardBuilder()
+    builder.add(KeyboardButton(text="Пройти опрос"))
+    return builder.as_markup(resize_keyboard=True, one_time_keyboard=True)

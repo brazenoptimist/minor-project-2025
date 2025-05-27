@@ -19,16 +19,29 @@ class UsersRepo(BaseRepo):
 
     async def create_from_aiogram_model(self, user: AiogramUser) -> User:
         try:
-            us = await self.create(
-                id=user.id,
-                username=user.username or str(user.id)
-            )
-            await self.session.commit()  # Явный коммит
-            logger.info(f"User created: {us}")
-            return us
+            # Сначала пытаемся получить существующего пользователя
+            existing_user = await self.get(id=user.id)
+            
+            if existing_user:
+                # Обновляем поля, включая is_admin (на случай, если статус админа изменился)
+                existing_user.username = user.username or str(user.id)
+                existing_user.is_admin = user.id in settings.admins
+                await self.session.commit()
+                logger.info(f"User updated: {existing_user}")
+                return existing_user
+            else:
+                # Создаем нового пользователя
+                new_user = await self.create(
+                    id=user.id,
+                    username=user.username or str(user.id),
+                    is_admin=user.id in settings.admins,
+                )
+                await self.session.commit()
+                logger.info(f"User created: {new_user}")
+                return new_user
         except Exception as e:
             await self.session.rollback()
-            logger.error(f"Error creating user: {e}")
+            logger.error(f"Error creating/updating user: {e}")
             raise
 
     async def get_by_user_id(self, user_id: int, *user_options) -> User | None:

@@ -1,6 +1,7 @@
 from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Any, Awaitable, Callable
+from bot.settings import settings
 
 from aiogram import BaseMiddleware, Dispatcher
 from aiogram.dispatcher.flags import get_flag
@@ -61,13 +62,14 @@ class GetUser(BaseMiddleware):
         if not user:
             user = await repo.users.create_from_aiogram_model(user_)
             logger.info("New user")
-
-        user.username = user_.username.lower() if user_.username else None
+        else:
+            user.is_admin = user_.id in settings.admins
+            user.username = user_.username.lower() if user_.username else None
 
         data["user"] = user
         await handler(event, data)
 
-        await repo.users.update(user)
+        await repo.users.session.commit()
         return None
 
 

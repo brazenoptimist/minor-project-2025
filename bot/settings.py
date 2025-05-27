@@ -21,7 +21,7 @@ class BotSettings(BaseSettings):
     bot_token: str
     parse_mode: Literal["MARKDOWN_V2", "MARKDOWN", "HTML"] = "HTML"
     drop_pending_updates: bool = True
-    rate_limit: int | float = 1
+    rate_limit: float = 0.5
 
 
 class DatabaseSettings(BaseSettings):
