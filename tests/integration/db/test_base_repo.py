@@ -24,16 +24,16 @@ async def test_get(repo: Repositories):
 
 async def test_update(repo: Repositories):
     await repo.users.create_from_model(TEST_USER)
-    us: User = await repo.users.get(TEST_USER.id)
+    us: User = await repo.users.get(id=TEST_USER.id)
 
     assert us is not None
 
-    us.username = None
+    new_username = "updated_username"
+    us.username = new_username
     await repo.users.update(us)
 
-    us: User = await repo.users.get(TEST_USER.id)
-
-    assert us.username is None
+    updated_user: User = await repo.users.get(id=TEST_USER.id)
+    assert updated_user.username == new_username
 
 
 async def test_delete(repo: Repositories):
